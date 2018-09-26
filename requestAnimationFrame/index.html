@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <div style="width: 100px;height: 100px;border: solid 1px #cccccc;" id="dv"></div>
+  <p>rgba(<span id="r">0</span>,<span id="g">0</span>,<span id="b">0</span>)</p>
+  <p>帧：<span id="count"></span>FPS</p>
+  <button id="btn">click</button><button id="cancle">cancle</button>
+</body>
+<script>
+  const [btn, cancle, dv] = [document.getElementById('btn'), document.getElementById('cancle'), document.getElementById('dv')];
+  const [domR, domG, domB] = [document.getElementById('r'), document.getElementById('g'), document.getElementById('b')];
+  const count = document.getElementById('count');
+  let [r, g, b] = [0, 0, 0];
+  let time = null;
+  let RAF = null;
+
+  function ani(t) {
+    if (!time) time = t;
+    else {
+      count.innerHTML = Math.ceil(1000 / (t - time));
+      time = t
+    }
+    if (++b === 256) {
+      b = 0;
+      if (++g === 256) {
+        g = 0;
+        ++r;
+      }
+    }
+    if (r !== 256) {
+      dv.style.backgroundColor = `rgba(${r},${g},${b})`;
+      domR.innerHTML = r;
+      domG.innerHTML = g;
+      domB.innerHTML = b;
+      RAF = requestAnimationFrame(ani);
+    }
+  }
+
+  btn.onclick = () => {
+    RAF = requestAnimationFrame(ani);
+  };
+
+  cancle.onclick = () => cancelAnimationFrame(RAF);
+</script>
+</html>
